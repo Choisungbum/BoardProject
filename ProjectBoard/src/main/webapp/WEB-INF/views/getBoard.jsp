@@ -1,0 +1,276 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> <!-- 날짜 포맷함수 변경 -->
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<!DOCTYPE html>
+<html>
+<head>
+<title>글 상세</title>
+<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
+<script src="/resources/jquery-3.5.1.min.js"></script> <!--jquery사용시 스크립트를 따로 선언해줌 -->
+<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
+<!-- json형식으로 값을 넘기는거에서 많이 힘ㄷ르었음 json형식 잘봐두기 content필수=>json.stringify사용(안의내용을 json형식으로 바꿔줌)-->
+<script>
+$(document).ready(function(){
+	replyList(); //댓글목록
+	 
+	$("#btninsertReply").click(function(){ 				//댓글 입력 
+		var replytext=$('textarea#replytext').val();
+		var bno=${board.seq};
+		var replyer="${user.userId}";
+	$.ajax({
+		type: "post",
+		url: "/insertReply.do",
+		contentType: 'application/json',
+		data: JSON.stringify({
+			'bno' : bno,
+			'replytext' : replytext,
+			'replyer' : replyer
+		}),
+		success: function(){
+			alert("댓글이 등록되었습니다.");
+			replyList();
+			},
+		error: function(){
+			alert(replytext+"에러발생");
+					}
+		
+		}); 	
+	});
+	
+	
+	
+});// 끝
+	
+	
+	function revise(rno){ //수정버튼을 위한 메서드, result[i].rno 값을 더해 각 댓글마다 버튼을 매핑할 수 있도록함
+	var rno = rno;
+	$("#updateForm"+rno).html("<textarea class=\"form-control\" rows=\"5\" id=\"ureplytext\" placeholder=\"\"></textarea><br>"
+			+"<button type=\"button\" class=\"btn btn-warning btn-xs\" id=\"btnupdateReply\" onclick='updateReply("+rno+")'>수정</button>");
+	
+	}
+	
+	function updateReply(rno){//			댓글수정
+		var rno = rno;
+		var bno = ${board.seq};
+		var replytext = $("textarea#ureplytext").val();
+		$.ajax({
+			type: "post",
+			url: "/updateReply.do",
+			contentType: 'application/json',
+			data: JSON.stringify({
+				'bno' : bno,
+				'rno' : rno,
+				'replytext' : replytext
+			}),
+			success: function(){
+				alert("댓글이  수정되었습니다.");
+				replyList();
+				},
+			error: function(){
+				alert(replytext+"에러발생");
+						}
+			
+			});	
+	}
+	
+	function deleteReply(rno){			  //댓글삭제
+		var rno = rno;
+		var bno=${board.seq};
+	$.ajax({
+		type: "post",
+		url: "/deleteReply.do",
+		contentType: 'application/json',
+		data: JSON.stringify({
+			'bno' : bno,
+			'rno' : rno
+		}),
+		success: function(){
+			alert("댓글이 삭제되었습니다.");
+			replyList();
+			},
+		error: function(){
+			alert("에러발생"+rno+"//"+bno);
+					}
+		
+		});	
+	}
+		
+	
+	
+	function replyList(){ 					//댓글목록
+		
+		var userid = document.getElementById("userid").value; //세션 userId값을 받음
+		
+		$.ajax({
+			type:"get",
+			url:"/getReplyList.do?bno=${board.seq}",
+			success: function(result){
+				console.log(result);
+				var output = "<hr>";
+				for(var i in result){
+					if(result[i].replyer == userid){
+						output += "<div>";
+						output += result[i].replyer;
+						output += "("+changeDate(result[i].regDate)+")&nbsp";
+						output += "<button type=\"button\" class=\"btn btn-info btn-xs\"id=\"btnupdate\" onclick='revise("+result[i].rno+")'>수정</button>&nbsp";
+						output += "<button type=\"button\" class=\"btn btn-danger btn-xs\" id=\"btndeleteReply\" onclick='deleteReply("+result[i].rno+")'>삭제</button>";
+						output += "</div><br>";
+						output += '<div id=updateForm'+result[i].rno+'>'
+						output += result[i].replytext;
+						output += "</div><hr>"
+					}
+					else{
+						output += "<div>";
+						output += result[i].replyer;
+						output += "("+changeDate(result[i].regDate)+")";
+						output += "</div><br>";
+						output += '<div id=updateForm'+result[i].rno+'>'
+						output += result[i].replytext;
+						output += "</div><hr>"
+					}
+				}   
+				$("#replyList").html(output);
+			}
+		});
+	}
+	function changeDate(date){
+		date = new Date(parseInt(date));
+		year = date.getFullYear();
+		month = (date.getMonth()+1);
+		day = (date.getDate());
+		hour = (date.getHours());
+		minute = date.getMinutes();
+		second = date.getSeconds();
+		//2자리수로 만들기
+		month < 10 ? month = '0' + month : month;
+		day < 10 ? day = '0' + day : day;
+		hour < 10 ? hour = '0' + hour : hour;
+		minute < 10 ? minute = '0' + minute : minute;
+		second < 10 ? second = '0' + second : second;
+		strDate = year+"-"+month+"-"+day+ " "+hour+":"+minute+":"+second;
+		return strDate;
+	}
+</script>
+</head>
+<body>
+
+<center>
+<h1>글 상세</h1>
+</center>
+<br>
+<hr>
+<form action="updateBoard.do" method="post">
+<input name="seq" type="hidden" value="${board.seq}" />
+<input type="hidden" name="userid" id="userid" value="${user.userId}" /> <!-- 자바스크립트로 userid 값을 보내기위한 구문-->
+	<div class="row" >
+		<div class="form-group" style="line-height:40px"> <!-- 글쓴이와 세션아이디가 같을경우 수정가능  -->
+			<c:choose> 
+				<c:when test="${user.userId ne board.writer}">
+					<div class="col-md-1"  >
+						<label >제목</label>
+					</div>
+					<div class="col-md-10">		
+						${board.title}
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="col-md-1" >
+						<label for="title">제목</label>
+					</div>
+					<div class="col-md-10">	
+						<input type="text" class="form-control" name="title" id="title" value="${board.title}" />
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
+	<div class="row" >
+		<div class="form-group" style="line-height:40px">
+			<div class="col-md-1" >
+				<label>작성자</label>
+			</div>
+			<div class="col-md-10">		
+				${board.writer}
+			</div>
+		</div>
+	</div>
+	<div class="row" >
+		<div class="form-group" style="line-height:40px">
+			<c:choose>
+				<c:when test="${user.userId ne board.writer}">
+					<div class="col-md-1" >
+						<label>내용</label>
+					</div>
+					<div class="col-md-10" >
+						${board.content}
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="col-md-1" >	
+						<label for="content">내용</label>
+					</div>
+					<div class="col-md-10">					
+						<textarea class="form-control" name="content" id="content" rows="20">${board.content }</textarea>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
+	<div class="row" >
+		<div class="form-group" style="line-height:40px" >
+			<div class="col-md-1" >
+				<label>등록일</label>
+			</div>
+			<div class="col-md-10" >
+				<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${board.regDate}" />
+			</div>
+		</div>
+	</div>
+	<div class="row" >
+		<div class="form-group" style="line-height:40px">
+			<div class="col-md-1" >	
+				<label>조회수</label>
+			</div>
+			<div class="col-md-10" >
+				${board.cnt}
+			</div>
+		</div>
+	</div>
+	<c:if test="${user.userId eq board.writer}">
+	<div align="center">
+		<button type="submit" class="btn btn-default">수정</td>
+	</div>
+	</c:if>
+</form>
+<center>
+<hr>
+<c:choose>
+	<c:when test="${user.userId eq board.writer}">
+		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
+		<a href="deleteBoard.do">글 삭제</a>&nbsp;&nbsp;&nbsp;
+		<a href="getBoardList.do">글목록</a>
+	</c:when>
+	<c:when test="${user.userId ne null && user.userId ne board.writer}">
+		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
+		<a href="getBoardList.do">글목록</a>
+	</c:when>
+	<c:otherwise>
+		<a href="getBoardList.do">글목록</a>
+	</c:otherwise>
+</c:choose>
+
+<div style="width:650px; text-align: center;">
+	<br>
+	<c:if test="${user.userId != null }">
+	<textarea class="form-control" rows="5" id="replytext" placeholder="댓글을 작성하세요"></textarea>
+	<button type="button" class="btn btn-success btn-xs" id="btninsertReply">댓글 작성</button>
+	</c:if>
+</div>
+</center>
+<div id="replyList"></div>
+</body>
+</html>

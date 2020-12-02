@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BoardDAO">
+
+	<resultMap id="boardResult" type="board">
+		<id property="seq" column="seq" />
+		<result property="title" column="title" />
+		<result property="writer" column="writer" />
+		<result property="content" column="content" />
+		<result property="regDate" column="regDate" />
+		<result property="cnt" column="cnt" />
+	</resultMap>
+	
+	
+	<insert id="insertBoard" parameterType="board">		<!-- 게시글 등록 -->
+		<![CDATA[
+		INSERT INTO BOARD(seq, title, writer, content)
+		VALUES( (select ifnull(max(seq),0)+1 from board b),#{title}, #{writer}, #{content})
+		]]>
+	</insert>
+	
+	<update id="updateBoard">	<!-- 게시글 수정 -->
+		<![CDATA[
+		UPDATE BOARD 
+		SET TITLE=#{title}, CONTENT=#{content} 
+		WHERE seq=#{seq}
+		]]>
+	</update>
+	
+	<delete id="deleteBoard">	<!-- 게시글 삭제 -->
+		<![CDATA[
+		DELETE FROM BOARD WHERE SEQ=#{seq}
+		]]>
+	</delete>
+	
+	<select id="getBoard" resultType="board">	<!-- 게시글 상세보기 -->
+		<![CDATA[
+		SELECT * FROM BOARD WHERE SEQ=#{seq}
+		]]>
+	</select>
+	
+	<update id="getBoardCnt">	<!-- 게시물 조회수 -->
+		UPDATE board SET CNT= cnt+1 WHERE SEQ=#{seq}
+	</update>	
+	
+	<select id="getBoardListCnt" resultType="int">	<!-- 게시물 총 개수 -->
+		SELECT COUNT(*) 
+		FROM BOARD
+		WHERE 1 = 1  
+		<if test="searchCondition == 'TITLE'">
+			AND TITLE LIKE concat('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchCondition == 'CONTENT'">
+			AND CONTENT LIKE concat('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchCondition == 'WRITER'">
+			AND WRITER LIKE concat('%', #{searchKeyword}, '%')
+		</if>
+	</select>
+	
+	<!-- where 1 = 1 불완전한 sql문을 방지하고  동적으로 조건을 붙힐수 있기때문 &&&게시글 댓글달기부분포함 -->
+	<select id="getBoardList" resultType="board">	<!-- 게시물 목록 보기 -->
+		SELECT *
+		FROM BOARD
+		WHERE 1 = 1  
+		<if test="searchCondition == 'TITLE'">
+			AND TITLE LIKE concat('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchCondition == 'CONTENT'">
+			AND CONTENT LIKE concat('%', #{searchKeyword}, '%')
+		</if>
+		<if test="searchCondition == 'WRITER'">
+			AND WRITER LIKE concat('%', #{searchKeyword}, '%')
+		</if>
+		ORDER BY SEQ desc
+		limit #{startIndex},#{cntPerPage}
+	</select>
+</mapper>

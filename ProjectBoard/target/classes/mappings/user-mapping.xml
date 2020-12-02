@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserDAO">
+
+	<insert id="insertUser" parameterType="user" useGeneratedKeys="true" keyProperty="id"><!-- 회원가입 -->
+	<![CDATA[
+		INSERT INTO USER(id, userId, password, name, role)
+		VALUES((select ifnull(max(id),0)+1 from user u),#{userId}, #{password}, #{name}, #{role})
+		]]>
+	</insert>
+	<update id="updateUser"> <!-- 회원수정 -->
+	<![CDATA[
+		UPDATE USER SET PASSWORD=#{password}, NAME=#{name}, ROLE=#{role} WHERE ID=#{id}
+		]]>
+	</update>
+	<delete id="deleteUser"><!-- 회원탈퇴 -->
+	<![CDATA[
+		DELETE FROM USER WHERE ID=#{id}
+		]]>
+	</delete>
+	<select id="selectLoginUser" resultType="user"><!-- 로그인  확인-->
+	<![CDATA[
+		SELECT * FROM USER
+		WHERE USERID=#{userId} AND PASSWORD=#{password}
+		]]>
+	</select> 
+	
+</mapper>

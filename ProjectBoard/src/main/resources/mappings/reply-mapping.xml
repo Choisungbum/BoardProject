@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReplyDAO">
+
+<insert id="insertReply" parameterType="reply"> <!-- 댓글 추가 -->
+	INSERT INTO REPLY(rno, bno, replytext, replyer)
+	VALUES((select ifnull(max(rno),0)+1 from reply re),#{bno},#{replytext}, #{replyer})
+</insert>
+
+<update id="updateReply"> <!-- 댓글 수정 -->
+	UPDATE REPLY SET
+	REPLYTEXT=#{replytext}
+	WHERE rno=#{rno} AND bno=#{bno}
+</update>
+
+<delete id="deleteReply"> <!-- 댓글 삭제 -->
+	DELETE FROM REPLY
+	WHERE rno=#{rno} AND bno=#{bno}
+</delete>
+
+<select id="getReplyList" resultType="reply"> <!-- 댓글 목록 불러오기 -->
+	SELECT *
+	 FROM REPLY
+	 WHERE bno=#{bno}
+	 ORDER BY rno
+</select>
+
+</mapper>
