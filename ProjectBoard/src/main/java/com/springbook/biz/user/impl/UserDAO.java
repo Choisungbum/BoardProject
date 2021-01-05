@@ -21,6 +21,10 @@ public class UserDAO {
 	public void deleteUser(UserVO vo) {				//회원 삭제
 		mybatis.delete("UserDAO.deleteUser", vo);
 	}
+	
+	public int selectLoginId(UserVO vo) {			//아이디 확인
+		return (Integer)mybatis.selectOne("UserDAO.selectLoginId", vo);
+	}
   
 	public UserVO selectLoginUser(UserVO vo) {		//로그인
 		return (UserVO)mybatis.selectOne("UserDAO.selectLoginUser", vo);

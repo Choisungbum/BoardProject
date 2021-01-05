@@ -19,10 +19,7 @@ function formSubmit(){
 	}
 }
 </script>
-<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-<link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
-<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
-<script src="/resources/jquery-3.5.1.min.js"></script>
+<jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
 <meta charset="UTF-8">
 <title>새글 등록</title>
 </head>
@@ -31,8 +28,8 @@ function formSubmit(){
 <center>
 <h1>새글등록</h1>
 
-<div align="right">
-<h5><a href="logout.do">log-out&nbsp;</a></h5>
+<div  align="right" style="position:relative;right:10px">
+<h5><button type="button" class="btn btn-link" onclick="location.href='logout.do'">logout</button></h5>
 </div>
 <hr>
 <form name="boardForm" onSubmit="return formSubmit();" action="insertBoard.do" method="post">

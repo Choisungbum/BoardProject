@@ -5,44 +5,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-<link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
-<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
-<script src="/resources/jquery-3.5.1.min.js"></script>
+<jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
 <title>글 목록</title>
 </head>
 <body>
 <center>
 <h1>글 목록</h1>
 <c:if test="${user.userId eq null }">
-<div align="right">
-<h5><a href="login.do">login</a>&nbsp<a href="insertUser.do">회원가입&nbsp</a></h5>
+<div align="right" style="position:relative;right:10px">
+<h5><button type="button" class="btn btn-link" onclick="location.href='login.do'">로그인</button>
+<button type="button" class="btn btn-link" onclick="location.href='insertUser.do'">회원가입</button></h5>
 </div>
 </c:if>
 
 <c:if test="${user.userId ne null }">
 <h3>${user.name }님 환영합니다</h3>
-<div align="right">
-<h4><a href="logout.do">log-out&nbsp</a></h4>
+<div align="right" style="position:relative;right:10px" >
+<h5><button type="button" class="btn btn-link" onclick="location.href='logout.do'">logout</button>
+<button type="button" class="btn btn-link" onclick="location.href='userMgm.do'">회원관리</button></h5>
 </div>
 </c:if>
 <hr>
+
 <!-- 검색 시작 -->
-<form action="getBoardList.do" method="post">
-<table class="table" >
-<tr>
-	<td>
-		<select name="searchCondition">
+<form action="getBoardList.do" method="post">  <!-- 부트스트랩적용하기  style="position:relative" -->
+<div class="row" style="display:flex; flex-direction:row;position:relative;left:20px">
+		<select name="searchCondition"  >
 		<c:forEach items="${conditionMap}" var="option" >
 			<option value="${option.value}">${option.key }
 		</c:forEach>
 		</select>
-		<input type="text" name="searchKeyword" />
+		<input type="text"  name="searchKeyword" />
 		<input type="submit" class="btn btn-info btn-xs" value="검색" />
-	</td>
-</tr>
-</table>
-
+</div>
+</form>
+<br>
 <!-- 게시물 목록 -->
 <table class="table table-hover" >
 <tr>
@@ -62,8 +59,9 @@
 </tr>
 </c:forEach>
 </table>
-<br>
-<br>
+
+<button type="button" class="btn btn-primary" onclick="location.href='insertBoard.do'">새글등록</button>
+<br><br><br>
 <!-- 페이징처리 -->
 <div> 
 	<c:if test="${pagination.curRange ne 1 }">
@@ -89,14 +87,12 @@
 		<a href="getBoardList.do?curPage=${pagination.pageCnt }">[끝]</a>
 	</c:if>
 </div>
+
+<!-- 
 <c:if test="${user.userId ne null }">
-<br><a href="insertBoard.do">새글 등록</a>
-</c:if>
-</form>
-<br>
-	<div style="float:left">
-                    총 게시글 수 : ${pagination.listCnt } /    총 페이지 수 : ${pagination.pageCnt } / 현재 페이지 : ${pagination.curPage } / 현재 블럭 : ${pagination.curRange } / 총 블럭 수 : ${pagination.rangeCnt }
-	</div>
+
+</c:if> -->
+<br><br>
 </center>
 </body>
 </html>

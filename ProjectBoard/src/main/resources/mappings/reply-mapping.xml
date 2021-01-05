@@ -4,25 +4,31 @@
 
 <insert id="insertReply" parameterType="reply"> <!-- 댓글 추가 -->
 	INSERT INTO REPLY(rno, bno, replytext, replyer)
-	VALUES((select ifnull(max(rno),0)+1 from reply re),#{bno},#{replytext}, #{replyer})
+	VALUES((SELECT IFNULL(MAX(rno),0)+1 FROM REPLY re),#{bno},#{replytext}, #{replyer})
 </insert>
 
 <update id="updateReply"> <!-- 댓글 수정 -->
+	<![CDATA[
 	UPDATE REPLY SET
 	REPLYTEXT=#{replytext}
-	WHERE rno=#{rno} AND bno=#{bno}
+	WHERE RNO=#{rno} AND BNO=#{bno}
+	]]>
 </update>
 
 <delete id="deleteReply"> <!-- 댓글 삭제 -->
+	<![CDATA[
 	DELETE FROM REPLY
-	WHERE rno=#{rno} AND bno=#{bno}
+	WHERE RNO=#{rno} AND BNO=#{bno}
+	]]>
 </delete>
 
 <select id="getReplyList" resultType="reply"> <!-- 댓글 목록 불러오기 -->
+	<![CDATA[
 	SELECT *
 	 FROM REPLY
-	 WHERE bno=#{bno}
-	 ORDER BY rno
+	 WHERE BNO=#{bno}
+	 ORDER BY RNO
+	 ]]>
 </select>
 
 </mapper>

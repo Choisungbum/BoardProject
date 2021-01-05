@@ -6,6 +6,8 @@ public interface UserService {
 	void updateUser(UserVO vo);
   
 	void deleteUser(UserVO vo);
+	
+	int selectLoginId(UserVO vo);
   
 	UserVO selectLoginUser(UserVO vo);
 }

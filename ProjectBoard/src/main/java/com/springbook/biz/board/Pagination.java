@@ -110,7 +110,7 @@ public class Pagination {
     this.nextPage = nextPage;
   }
   
-  public Pagination(int listCnt, int curPage) {			//생설자를 이용하여 초기화
+  public Pagination(int listCnt, int curPage) {			//생성자를 이용하여 초기화
     setCurPage(curPage);
     setListCnt(listCnt);
     setPageCnt(listCnt);

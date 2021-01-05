@@ -15,13 +15,8 @@
 	<div class="page-header">
 	<h1>게시판 프로그램</h1>
 	</div>
-		<br><br><br>
-		회원으로 접속하기
-		<a href="login.do">로그인</a><br><br><br>
-		회원가입하기
-		<a href="insertUser.do">회원가입</a><br><br><br>
 		비회원으로 접속하기
-		<a href="getBoardList.do">게시물리스트보기</a>
+		<a href="getBoardList.do" class="btn btn-primary btn-sm active" >게시물리스트보기</a>
 	<hr>
 </center>
 </body>

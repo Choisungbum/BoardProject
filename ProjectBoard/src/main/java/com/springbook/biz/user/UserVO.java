@@ -3,10 +3,14 @@ package com.springbook.biz.user;
 public class UserVO {
 	private int id;				//회원 고유 번호
 	private String userId;		//회원 아이디
-	private String password;		//회원 비밀번호
-	private String name;			//회원 이름
-	private String role;			//회원 직급
+	private String password;	//회원 비밀번호
+	private String name;		//회원 이름
+	private String email;		//이메일
+	private String tel;			//전화번호
+	private String birth;		//생년월일
+	private String sex;			//성별
   
+	
 	public int getId() {
 		return id;
 	}
@@ -38,16 +42,44 @@ public class UserVO {
 	public void setName(String name) {
 		this.name = name;
 	}
-  
-	public String getRole() {
-		return role;
+	
+	public String getEmail() {
+		return email;
 	}
-  
-	public void setRole(String role) {
-		this.role = role;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
-  
+
+	public String getTel() {
+		return tel;
+	}
+
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	public String getBirth() {
+		return birth;
+	}
+
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+	
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	@Override
 	public String toString() {
-		return "UserVO [id=" + id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", role=" + role + "]";
+		return "UserVO [id=" + id + ", userId=" + userId + ", password=" + password + ", name=" + name + ", email="
+				+ email + ", tel=" + tel + ", birth=" + birth + ", sex=" + sex + "]";
 	}
+
+  
 }

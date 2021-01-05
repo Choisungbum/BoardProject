@@ -23,7 +23,6 @@ public class ReplyController {
 		vo.setBno(bno);
 		vo.setReplytext(replytext);
 		vo.setReplyer(replyer);
-		vo.getRegDate();
 		replyService.insertReply(vo);
 	}
   

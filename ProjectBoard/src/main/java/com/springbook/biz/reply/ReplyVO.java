@@ -1,6 +1,5 @@
 package com.springbook.biz.reply;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReplyVO {

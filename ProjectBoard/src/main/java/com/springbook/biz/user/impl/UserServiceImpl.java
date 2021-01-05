@@ -21,6 +21,10 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(UserVO vo) {			//회원 삭제
 		userDAO.deleteUser(vo);
 	}
+	
+	public int selectLoginId(UserVO vo) {		//아이디 확인
+		return userDAO.selectLoginId(vo);
+	}
   
 	public UserVO selectLoginUser(UserVO vo) {	//로그인
 		return userDAO.selectLoginUser(vo);

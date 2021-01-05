@@ -3,81 +3,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!-- 게시물작성시 입력부분 에러처리 -->
-<script type="text/javascript">
-function formSubmit(){
-	if(document.boardForm.title.value == ""){
-		alert("제목을 입력해주세요");
-		return false;
-	}
-	else if(document.boardForm.content.value == ""){
-		alert("내용을 입력해주세요");
-		return false;
-	}
-	else{
-		return true;
-	}
-}
-</script>
-<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-<link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
-<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
-<script src="/resources/jquery-3.5.1.min.js"></script>
-<meta charset="UTF-8">
+
+<link rel=stylesheet href=/resources/css/bootstrap.min.css>
+<link rel=stylesheet href=/resources/css/bootstrap-theme.min.css>
+<link rel=stylesheet href=/resources/css/sumoselect.css>
+<script type=text/javascript src=/resources/js/bootstrap.js></script>
+<script src=/resources/jquery-3.5.1.min.js></script>
+<script src=/resources/js/jquery.sumoselect.min.js></script>
+
 <title>새글 등록</title>
 </head>
+<script>
+$(document).ready(function(){
+    // selectbox styling
+	
+  
+	 
+
+});
+
+function passForm(){
+	
+	var output="";
+	
+	output += "<div class=row>";
+	output += "<div class=form-group style='line-height:40px'>";
+	output += "<div class='col-md-1 col-md-offset-3' >";
+	output += "<label for=password >비밀번호</label><br>";
+	output += "</div>";
+	output += "<div class=col-md-4 >";
+	output += "<input type=password class=form-control maxlength=20 name=password id='password' placeholder='비밀번호를 입력하세요.' />";
+	output += "</div>";
+	output += "</div>";
+	output += "</div>";
+	output += "<div class=row>";
+	output += "<div class='col-md-5 col-md-offset-4' style='line-height:10px;font-size:10px;position:relative;bottom:10px' >";
+	output += "<p id='pass_base' style='display:block'>4~20자 영문, 숫자, 특수문자를 포함해 주세요.(이전 비밀번호는 사용할 수 없습니다)</p>";
+	output += "<p id='pass_poss' style='display:none;color:blue'>사용 가능한 비밀번호입니다.</p>";	
+	output += "<p id='pass_imposs' style='display:none;color:red'>사용할 수 없는 비밀번호입니다.</p>";
+	output += "<p id='pass_before' style='display:none;color:red'>이전 비밀번호와 일치합니다.</p>";
+	output += "</div>";
+	output += "</div>";
+	output += "<div class=row>";
+	output += "<div class=form-group style='line-height:40px'>";
+	output += "<div class='col-md-1 col-md-offset-3' >";
+	output += "<label for=password>재확인</label><br>";
+	output += "</div>";
+	output += "<div class=col-md-4 >";
+	output += "<input type=password class=form-control maxlength=20 name=password_ch id='password_ch' placeholder='비밀번호를 재확인해주세요.' /> ";
+	output += "</div>";
+	output += "</div>";
+	output += "</div>";
+	output += "<div class=row>";
+	output += "<div class='col-md-3 col-md-offset-4' style='line-height:10px; font-size:10px' >";
+	output += "<p id='pass_ch_base' style='display:block'></p>";
+	output += "<p id='pass_ch_poss' style='display:none;color:blue' >비밀번호가 일치합니다.</p>";
+	output += "<p id='pass_ch_imposs' style='display:none;color:red'>비밀번호가 일치하지 않습니다.</p>";
+	output += "</div>";
+	output += "</div>";
+
+	$("#passBtn").attr("value","Y");
+	$("#passUpdate").html(output);
+	
+
+	 var passv = RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{4,20}$/);
+	 $("#password").on("propertychange change keyup paste input", function(){
+		 	var inpValue = $(this).val();
+		 
+		 	if(inpValue == ""){
+		 		$("#pass_base").show();
+		 		$("#pass_poss").hide();
+		 		$("#pass_imposs").hide();
+		 	} 
+		
+		 	else if((passv).test(inpValue) == true && inpValue.length > 4){
+		 		
+		 		$("#pass_base").hide();
+		 		$("#pass_poss").show();
+		 		$("#pass_imposs").hide();
+		 	}
+		 	else if((passv).test(inpValue) == false || inpValue.length < 4){
+		 		$("#pass_base").hide();
+		 		$("#pass_poss").hide();
+		 		$("#pass_imposs").show();
+		 	}
+		 });
+	
+}
+</script>
+
 <body>
-
-<center>
-<h1>새글등록</h1>
-</center>
-<div align="right">
-<h5><a href="logout.do">log-out&nbsp;</a></h5>
-</div>
-<hr>
-<form name="boardForm" onSubmit="return formSubmit();" action="insertBoard.do" method="post">
-<input type="hidden" name="writer" value="${user.userId}">
+ 
+ <div id="passUpdate">
+ <div class="row">
 		<div class="form-group" style="line-height:40px">
-			<div class="col-md-1"  >
-				<label for="title">제목</label>
+			<div class="col-md-1 col-md-offset-3" >
+				<label for="password">비밀번호</label><br>
 			</div>
-			<div class="col-md-10">
-				<input type="text" class="form-control" name="title" id="title" />
-			</div>
-		</div>
-	</div>
-
-	<div class="row" >
-		<div class="form-group" style="line-height:40px"> <!-- disabled 속성을 통해 id변경불가-->
-			<div class="col-md-1" >
-				<label for="writer">작성자</label>
-			</div>
-			<div class="col-md-10" >
-				<input type="text" class="form-control" name="writer" id="writer" />
+			<div class="col-md-4" >
+				<button type="button" class="btn btn-default" id="passBtn" onclick="passForm()" value="N">비밀번호 변경하기</button>
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="form-group" style="line-height:40px">
-			<div class="col-md-1">
-				<label for="content">내용</label>
-			</div>
-			<div class="col-md-10">
-				<textarea class="form-control" name="content" id="content" rows="20" ></textarea>
-			</div>
-		</div>
 	</div>
-	<div align="center">
-		<button type="submit" class="btn btn-default">등록</button>
-	</div>
-</form>
+
+ 
 
 
-</body>
 </html>
-
-		<fmt:parseDate var="regDate" value=${date} pattern="yyyy-MM-dd HH:mm:ss" />
-		<fmt:formatDate value="regDate" pattern="yyyy-MM-dd HH:mm:ss" />
-
 		
 		

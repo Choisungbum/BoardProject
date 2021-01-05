@@ -8,10 +8,7 @@
 <html>
 <head>
 <title>글 상세</title>
-<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-<link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
-<script src="/resources/jquery-3.5.1.min.js"></script> <!--jquery사용시 스크립트를 따로 선언해줌 -->
-<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
+<jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
 <!-- json형식으로 값을 넘기는거에서 많이 힘ㄷ르었음 json형식 잘봐두기 content필수=>json.stringify사용(안의내용을 json형식으로 바꿔줌)-->
 <script>
 $(document).ready(function(){
@@ -19,6 +16,10 @@ $(document).ready(function(){
 	 
 	$("#btninsertReply").click(function(){ 				//댓글 입력 
 		var replytext=$('textarea#replytext').val();
+	if(replytext == ""){								//댓글창이 비어있을경우 등록 X
+		alert("댓글을 입력해 주세요");
+		return 0;
+	}
 		var bno=${board.seq};
 		var replyer="${user.userId}";
 	$.ajax({
@@ -35,18 +36,18 @@ $(document).ready(function(){
 			replyList();
 			},
 		error: function(){
-			alert(replytext+"에러발생");
-					}
+			alert("에러발생");
+			}
 		
 		}); 	
 	});
 	
 	
 	
-});// 끝
+});
 	
 	
-	function revise(rno){ //수정버튼을 위한 메서드, result[i].rno 값을 더해 각 댓글마다 버튼을 매핑할 수 있도록함
+	function revise(rno){ 
 	var rno = rno;
 	$("#updateForm"+rno).html("<textarea class=\"form-control\" rows=\"5\" id=\"ureplytext\" placeholder=\"\"></textarea><br>"
 			+"<button type=\"button\" class=\"btn btn-warning btn-xs\" id=\"btnupdateReply\" onclick='updateReply("+rno+")'>수정</button>");
@@ -71,8 +72,8 @@ $(document).ready(function(){
 				replyList();
 				},
 			error: function(){
-				alert(replytext+"에러발생");
-						}
+				alert("에러발생");
+				}
 			
 			});	
 	}
@@ -93,17 +94,15 @@ $(document).ready(function(){
 			replyList();
 			},
 		error: function(){
-			alert("에러발생"+rno+"//"+bno);
-					}
+			alert("에러발생");
+			}
 		
 		});	
-	}
-		
-	
+	}		
 	
 	function replyList(){ 					//댓글목록
 		
-		var userid = document.getElementById("userid").value; //세션 userId값을 받음
+		var userid = document.getElementById("userid").value; 
 		
 		$.ajax({
 			type:"get",
@@ -119,18 +118,18 @@ $(document).ready(function(){
 						output += "<button type=\"button\" class=\"btn btn-info btn-xs\"id=\"btnupdate\" onclick='revise("+result[i].rno+")'>수정</button>&nbsp";
 						output += "<button type=\"button\" class=\"btn btn-danger btn-xs\" id=\"btndeleteReply\" onclick='deleteReply("+result[i].rno+")'>삭제</button>";
 						output += "</div><br>";
-						output += '<div id=updateForm'+result[i].rno+'>'
+						output += "<div id=updateForm"+result[i].rno+">";
 						output += result[i].replytext;
-						output += "</div><hr>"
+						output += "</div><hr>";
 					}
 					else{
 						output += "<div>";
 						output += result[i].replyer;
 						output += "("+changeDate(result[i].regDate)+")";
 						output += "</div><br>";
-						output += '<div id=updateForm'+result[i].rno+'>'
+						output += "<div id=updateForm"+result[i].rno+">";
 						output += result[i].replytext;
-						output += "</div><hr>"
+						output += "</div><hr>";
 					}
 				}   
 				$("#replyList").html(output);
@@ -154,6 +153,19 @@ $(document).ready(function(){
 		strDate = year+"-"+month+"-"+day+ " "+hour+":"+minute+":"+second;
 		return strDate;
 	}
+	
+	$("#delBoard").click(function(){
+		var writer = ${board.writer};
+		console.log(writer);
+		var user = ${user.userId};
+		console.log(user);
+		if(!(writer).equals(user)){
+			alert("작성자가 아닙니다");
+			return false;
+		}
+			
+	});
+	
 </script>
 </head>
 <body>
@@ -247,12 +259,12 @@ $(document).ready(function(){
 	</c:if>
 </form>
 <center>
-<hr>
+
 <c:choose>
 	<c:when test="${user.userId eq board.writer}">
-		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
-		<a href="deleteBoard.do">글 삭제</a>&nbsp;&nbsp;&nbsp;
-		<a href="getBoardList.do">글목록</a>
+		<a href="insertBoard.do" class="btn btn-link btn-sm">글 등록</a>&nbsp;&nbsp;&nbsp;
+		<a href="deleteBoard.do" class="btn btn-link btn-sm">글 삭제</a>&nbsp;&nbsp;&nbsp;
+		<a href="getBoardList.do" class="btn btn-link btn-sm">글목록</a>
 	</c:when>
 	<c:when test="${user.userId ne null && user.userId ne board.writer}">
 		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
@@ -262,12 +274,11 @@ $(document).ready(function(){
 		<a href="getBoardList.do">글목록</a>
 	</c:otherwise>
 </c:choose>
-
 <div style="width:650px; text-align: center;">
 	<br>
 	<c:if test="${user.userId != null }">
-	<textarea class="form-control" rows="5" id="replytext" placeholder="댓글을 작성하세요"></textarea>
-	<button type="button" class="btn btn-success btn-xs" id="btninsertReply">댓글 작성</button>
+		<textarea class="form-control" rows="5" id="replytext" placeholder="댓글을 작성하세요"></textarea>
+		<button type="button" class="btn btn-success btn-xs" id="btninsertReply">댓글 작성</button>
 	</c:if>
 </div>
 </center>

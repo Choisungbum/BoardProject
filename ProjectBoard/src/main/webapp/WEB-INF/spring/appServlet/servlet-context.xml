@@ -28,5 +28,20 @@
 		<beans:property name="suffix" value="" />
 	</beans:bean>
 	
+	<!-- 인터셉터 객체 생성 -->
+	<beans:bean id="authenticationInterceptor" class="com.springbook.biz.interceptor.AuthenticationInterceptor"></beans:bean>
+	
+	<!-- 인터셉터 설정 -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/insertBoard.do" />
+			<mapping path="/updateBoard.do" />
+			<mapping path="/deleteBoard.do" />
+			<mapping path="/getBoard.do" />
+			<beans:ref bean="authenticationInterceptor" />
+		</interceptor>
+	</interceptors>
+	
+	
 	
 </beans:beans>

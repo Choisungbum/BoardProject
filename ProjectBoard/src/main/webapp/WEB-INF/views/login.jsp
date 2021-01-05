@@ -1,13 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <title>로그인</title>
-<link rel="stylesheet" href="/resources/css/bootstrap.min.css">
-<link rel="stylesheet" href="/resources/css/bootstrap-theme.min.css">
-<script type="text/javascript" src="/resources/js/bootstrap.js"></script>
+<jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
 <script src="/resources/jquery-3.5.1.min.js"></script>
 <!-- 로그인시 입력부분 에러처리 -->
 <script type="text/javascript">
@@ -20,9 +19,9 @@ function formSubmit(){
 		alert("비밀번호을 입력해주세요");
 		return false;
 	}
-	else{
-		return true;
-	}
+	
+	return true;
+	
 }
 </script>
 </head>
@@ -33,6 +32,8 @@ function formSubmit(){
 <br><br>
 <div class="container">
 <form name="loginForm" onSubmit="return formSubmit();" action="login.do" method="post">
+<input type="hidden" name="errorsId" id="errorsId" value="${errors.id}" />				<!-- errors맵 값을 jquery로 값을 넘겨주기위함  -->
+<input type="hidden" name="errorsPass" id="errorsPass" value="${errors.pass}" />
 	<div class="row">
 		<div class="form-group" style="line-height:40px" >
 			<div class="col-md-1 col-md-offset-4" >
@@ -40,6 +41,7 @@ function formSubmit(){
 			</div>
 			<div class="col-md-3" >
 				<input type="text" class="form-control" name="userId" id="userId" placeholder="아이디를 입력하세요">
+				<c:if test="${errors.id}"><span style="color:red">아이디가 존재하지 않습니다 </span></c:if>
 			</div>
 		</div>
 	</div>
@@ -50,6 +52,7 @@ function formSubmit(){
 			</div>
 			<div class="col-md-3" >
 				<input type="password" class="form-control" name="password" id="password" placeholder="비밀번호를 입력하세요">
+				<c:if test="${errors.pass}"><span style="color:red">비밀번호가 틀렸습니다</span></c:if>
 			</div>
 		</div>
 	</div>

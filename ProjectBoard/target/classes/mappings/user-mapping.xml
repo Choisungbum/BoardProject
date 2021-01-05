@@ -4,13 +4,13 @@
 
 	<insert id="insertUser" parameterType="user" useGeneratedKeys="true" keyProperty="id"><!-- 회원가입 -->
 	<![CDATA[
-		INSERT INTO USER(id, userId, password, name, role)
-		VALUES((select ifnull(max(id),0)+1 from user u),#{userId}, #{password}, #{name}, #{role})
+		INSERT INTO USER(id, userId, password, name, email, tel, birth, sex)
+		VALUES((select ifnull(max(id),0)+1 from user u),#{userId}, #{password}, #{name}, #{email}, #{tel}, #{birth}, #{sex})
 		]]>
 	</insert>
 	<update id="updateUser"> <!-- 회원수정 -->
 	<![CDATA[
-		UPDATE USER SET PASSWORD=#{password}, NAME=#{name}, ROLE=#{role} WHERE ID=#{id}
+		UPDATE USER SET PASSWORD=#{password}, NAME=#{name}, EMAIL=#{email}, TEL=#{tel}, BIRTH=#{birth}, SEX=#{sex} WHERE ID=#{id}
 		]]>
 	</update>
 	<delete id="deleteUser"><!-- 회원탈퇴 -->
@@ -18,6 +18,12 @@
 		DELETE FROM USER WHERE ID=#{id}
 		]]>
 	</delete>
+	<select id="selectLoginId" resultType="int"><!--  Id확인 -->
+	<![CDATA[
+		SELECT COUNT(*) FROM USER
+		WHERE USERID=#{userId}
+	]]>
+	</select>
 	<select id="selectLoginUser" resultType="user"><!-- 로그인  확인-->
 	<![CDATA[
 		SELECT * FROM USER

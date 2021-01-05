@@ -1,10 +1,12 @@
 package com.springbook.biz.controller;
 
-import com.springbook.biz.board.BoardService;
-import com.springbook.biz.board.BoardVO;
-import com.springbook.biz.board.Pagination;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.springbook.biz.board.BoardService;
+import com.springbook.biz.board.BoardVO;
+import com.springbook.biz.board.Pagination;
+
 @Controller("boardController")
-@SessionAttributes({"board"})
+@SessionAttributes("board")
 public class BoardController {
 	@Autowired
 	private BoardService boardService;
@@ -43,9 +49,33 @@ public class BoardController {
 		return "redirect:getBoardList.do";
 	}
   
-	@RequestMapping("/getBoard.do")												//게시물 상세보기
-	public String getBoard(BoardVO vo, Model model) {
-		boardService.getBoardCnt(vo);
+	@RequestMapping("/getBoard.do")												//게시물 상세보기(쿠키를 추가해 조회수 새로고침해도 못 올라가게 함)
+	public String getBoard(BoardVO vo, Model model, HttpServletRequest req, HttpServletResponse res) {
+		String cseq = req.getParameter("seq");	
+		Cookie[] cookies = req.getCookies();
+		Cookie cntCookie = null;
+		if(cookies != null && cookies.length > 0) {
+			for(int i=0; i < cookies.length; i++) {
+				if(cookies[i].getName().equals("viewCookie")) {
+					cntCookie = cookies[i];
+				}
+			}
+		}
+		if(cntCookie==null) {
+			Cookie newCookie = new Cookie("viewCookie","|"+cseq+"|");
+			res.addCookie(newCookie);
+			boardService.getBoardCnt(vo);
+		} 
+		else {
+			String value = cntCookie.getValue();	
+			if(value.indexOf("|"+cseq+"|") < 0) {
+				value += "|"+cseq+"|";
+				cntCookie.setValue(value);
+				res.addCookie(cntCookie);
+				boardService.getBoardCnt(vo);
+			}
+		}
+
 		model.addAttribute("board", boardService.getBoard(vo));
 		return "getBoard.jsp";
 	}
