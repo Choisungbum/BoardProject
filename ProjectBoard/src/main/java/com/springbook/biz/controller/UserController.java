@@ -89,7 +89,7 @@ public class UserController {
 		return userService.selectLoginId(vo);
 	}
   
-	@RequestMapping("/userMgm.do")											//로그인 성공 페이지
+	@RequestMapping("/userMgm.do")												//회원관리 페이지 
 	public String userMgm(UserVO vo, Model model) {
 		return "userMgm.jsp";
 	}
@@ -117,6 +117,7 @@ public class UserController {
 		else if(email2 != null) {
 			ema +=email2;
 		}
+		vo.setEmail(ema);
 		userService.updateUser(vo);
 		model.addAttribute("user", userService.selectLoginUser(vo));
 		return "redirect:getBoardList.do";

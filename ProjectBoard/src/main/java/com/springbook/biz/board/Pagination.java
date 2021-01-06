@@ -43,7 +43,7 @@ public class Pagination {
   }
   
   public void setCurRange(int curPage) {				
-    this.curRange = (curPage - 1) / this.rangeSize + 1;
+    this.curRange = (curPage - 1) / rangeSize + 1;
   }
   
   public int getListCnt() {
@@ -91,7 +91,7 @@ public class Pagination {
   }
   
   public void setStartIndex(int curPage) {
-    this.startIndex = (curPage - 1) * this.pageSize;
+    this.startIndex = (curPage - 1) * pageSize;
   }
   
   public int getPrevPage() {
@@ -110,7 +110,7 @@ public class Pagination {
     this.nextPage = nextPage;
   }
   
-  public Pagination(int listCnt, int curPage) {			//생성자를 이용하여 초기화
+  public Pagination(int listCnt, int curPage) {		
     setCurPage(curPage);
     setListCnt(listCnt);
     setPageCnt(listCnt);

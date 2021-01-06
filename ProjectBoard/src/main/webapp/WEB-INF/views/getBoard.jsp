@@ -180,24 +180,12 @@ $(document).ready(function(){
 <input type="hidden" name="userid" id="userid" value="${user.userId}" /> <!-- 자바스크립트로 userid 값을 보내기위한 구문-->
 	<div class="row" >
 		<div class="form-group" style="line-height:40px"> <!-- 글쓴이와 세션아이디가 같을경우 수정가능  -->
-			<c:choose> 
-				<c:when test="${user.userId ne board.writer}">
-					<div class="col-md-1"  >
-						<label >제목</label>
-					</div>
-					<div class="col-md-10">		
-						${board.title}
-					</div>
-				</c:when>
-				<c:otherwise>
-					<div class="col-md-1" >
-						<label for="title">제목</label>
-					</div>
-					<div class="col-md-10">	
-						<input type="text" class="form-control" name="title" id="title" value="${board.title}" />
-					</div>
-				</c:otherwise>
-			</c:choose>
+			<div class="col-md-1"  >
+				<label >제목</label>
+			</div>
+			<div class="col-md-10">		
+				${board.title}
+			</div>
 		</div>
 	</div>
 	<div class="row" >
@@ -212,24 +200,12 @@ $(document).ready(function(){
 	</div>
 	<div class="row" >
 		<div class="form-group" style="line-height:40px">
-			<c:choose>
-				<c:when test="${user.userId ne board.writer}">
-					<div class="col-md-1" >
-						<label>내용</label>
-					</div>
-					<div class="col-md-10" >
-						${board.content}
-					</div>
-				</c:when>
-				<c:otherwise>
-					<div class="col-md-1" >	
-						<label for="content">내용</label>
-					</div>
-					<div class="col-md-10">					
-						<textarea class="form-control" name="content" id="content" rows="20">${board.content }</textarea>
-					</div>
-				</c:otherwise>
-			</c:choose>
+			<div class="col-md-1" >
+				<label>내용</label>
+			</div>
+			<div class="col-md-10" >
+				${board.content}
+			</div>
 		</div>
 	</div>
 	<div class="row" >
@@ -252,21 +228,17 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
-	<c:if test="${user.userId eq board.writer}">
-	<div align="center">
-		<button type="submit" class="btn btn-default">수정</td>
-	</div>
-	</c:if>
 </form>
 <center>
 
 <c:choose>
-	<c:when test="${user.userId eq board.writer}">
+	<c:when test="${user.userId eq null || user.userId eq board.writer}">
 		<a href="insertBoard.do" class="btn btn-link btn-sm">글 등록</a>&nbsp;&nbsp;&nbsp;
+		<a href="updateBoard.do" class="btn btn-link btn-sm">글 수정</a>&nbsp;&nbsp;&nbsp;
 		<a href="deleteBoard.do" class="btn btn-link btn-sm">글 삭제</a>&nbsp;&nbsp;&nbsp;
 		<a href="getBoardList.do" class="btn btn-link btn-sm">글목록</a>
 	</c:when>
-	<c:when test="${user.userId ne null && user.userId ne board.writer}">
+	<c:when test="${user.userId ne board.writer}">
 		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
 		<a href="getBoardList.do">글목록</a>
 	</c:when>

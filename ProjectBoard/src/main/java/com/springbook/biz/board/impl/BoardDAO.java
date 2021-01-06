@@ -31,7 +31,7 @@ public class BoardDAO {
 		return (BoardVO)mybatis.selectOne("BoardDAO.getBoard", vo);
 	}
   
-	public List<BoardVO> getBoardList(BoardVO vo) {		//게시물 목록 보기
+	public List<BoardVO> getBoardList(BoardVO vo) {			//게시물 목록 보기
 		return mybatis.selectList("BoardDAO.getBoardList", vo);
 	}
   

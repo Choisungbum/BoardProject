@@ -26,25 +26,29 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
   
-	@RequestMapping(value = "/insertBoard.do", method = {RequestMethod.GET})		//게시물 등록 페이지 이동
+	@RequestMapping(value = "/insertBoard.do", method = RequestMethod.GET)		//게시물 등록 페이지 이동
 	public String insertBoardView(BoardVO vo) {
 		return "insertBoard.jsp";
 	}
   
-	@RequestMapping(value = "/insertBoard.do", method = {RequestMethod.POST})		//게시물 등록
+	@RequestMapping(value = "/insertBoard.do", method = RequestMethod.POST)		//게시물 등록
 	public String insertBoard(BoardVO vo) {
 		boardService.insertBoard(vo);
 		return "redirect:getBoardList.do";
 	}
   
-	@RequestMapping("/updateBoard.do")											//게시물 업데이트
+	@RequestMapping(value = "/updateBoard.do", method = RequestMethod.GET)		//게시물 업데이트 페이지 이동
+	public String updateboardView(@ModelAttribute("board") BoardVO vo) {					 
+	  	return "updateBoard.jsp";
+	}
+	@RequestMapping(value = "/updateBoard.do", method = RequestMethod.POST)		//게시물 업데이트
 	public String updateboard(@ModelAttribute("board") BoardVO vo) {					 
 		boardService.updateBoard(vo);
 	  	return "redirect:getBoardList.do";
 	}
   
 	@RequestMapping("/deleteBoard.do")											//게시물 삭제
-	public String deleteBoard(@ModelAttribute("board") BoardVO vo) {					
+	public String deleteBoard(@ModelAttribute("board") BoardVO vo) {			
 		boardService.deleteBoard(vo);
 		return "redirect:getBoardList.do";
 	}
@@ -80,7 +84,7 @@ public class BoardController {
 		return "getBoard.jsp";
 	}
   
-	@RequestMapping("/getBoardList.do")											//게시물 목록 보기(페이징, 검색목록, 조회수)
+	@RequestMapping("/getBoardList.do")											//게시물 목록 보기(페이징, 검색목록)
 	public String getBoardList(BoardVO vo, Model model, @RequestParam(defaultValue = "1") int curPage) {
 		if (vo.getSearchCondition() == null) vo.setSearchCondition("TITLE");	//검색목록 초기설정 
 		if (vo.getSearchKeyword() == null) vo.setSearchKeyword("");  

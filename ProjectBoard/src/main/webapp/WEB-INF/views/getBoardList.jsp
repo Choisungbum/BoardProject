@@ -87,11 +87,6 @@
 		<a href="getBoardList.do?curPage=${pagination.pageCnt }">[끝]</a>
 	</c:if>
 </div>
-
-<!-- 
-<c:if test="${user.userId ne null }">
-
-</c:if> -->
 <br><br>
 </center>
 </body>
