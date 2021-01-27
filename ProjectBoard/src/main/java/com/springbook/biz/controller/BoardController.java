@@ -37,12 +37,12 @@ public class BoardController {
 		return "redirect:getBoardList.do";
 	}
   
-	@RequestMapping(value = "/updateBoard.do", method = RequestMethod.GET)		//게시물 업데이트 페이지 이동
-	public String updateboardView(@ModelAttribute("board") BoardVO vo) {					 
+	@RequestMapping(value = "/updateBoard.do", method = RequestMethod.GET)		//게시물 업데이트 페이지 이동 @ModelAttribute("board")
+	public String updateboardView(BoardVO vo) {					 
 	  	return "updateBoard.jsp";
 	}
 	@RequestMapping(value = "/updateBoard.do", method = RequestMethod.POST)		//게시물 업데이트
-	public String updateboard(@ModelAttribute("board") BoardVO vo) {					 
+	public String updateboard(BoardVO vo) {					 
 		boardService.updateBoard(vo);
 	  	return "redirect:getBoardList.do";
 	}

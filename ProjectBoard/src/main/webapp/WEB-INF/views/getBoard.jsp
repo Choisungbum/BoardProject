@@ -9,7 +9,7 @@
 <head>
 <title>글 상세</title>
 <jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
-<!-- json형식으로 값을 넘기는거에서 많이 힘ㄷ르었음 json형식 잘봐두기 content필수=>json.stringify사용(안의내용을 json형식으로 바꿔줌)-->
+<!-- json형식으로 값을 넘기는거에서 많이 힘들었음 json형식 잘봐두기 content필수=>json.stringify사용(안의내용을 json형식으로 바꿔줌)-->
 <script>
 $(document).ready(function(){
 	replyList(); //댓글목록
@@ -33,6 +33,7 @@ $(document).ready(function(){
 		}),
 		success: function(){
 			alert("댓글이 등록되었습니다.");
+			$('textarea#replytext').attr("value","");
 			replyList();
 			},
 		error: function(){
@@ -41,15 +42,13 @@ $(document).ready(function(){
 		
 		}); 	
 	});
-	
-	
-	
+
 });
 	
 	
 	function revise(rno){ 
 	var rno = rno;
-	$("#updateForm"+rno).html("<textarea class=\"form-control\" rows=\"5\" id=\"ureplytext\" placeholder=\"\"></textarea><br>"
+	$("#updateForm"+rno).html("<textarea style=\"width:500px\" class=\"form-control\" rows=\"5\" id=\"ureplytext\" placeholder=\"\"></textarea><br>"
 			+"<button type=\"button\" class=\"btn btn-warning btn-xs\" id=\"btnupdateReply\" onclick='updateReply("+rno+")'>수정</button>");
 	
 	}
@@ -68,7 +67,7 @@ $(document).ready(function(){
 				'replytext' : replytext
 			}),
 			success: function(){
-				alert("댓글이  수정되었습니다.");
+				alert("댓글이 수정되었습니다.");
 				replyList();
 				},
 			error: function(){
@@ -108,7 +107,6 @@ $(document).ready(function(){
 			type:"get",
 			url:"/getReplyList.do?bno=${board.seq}",
 			success: function(result){
-				console.log(result);
 				var output = "<hr>";
 				for(var i in result){
 					if(result[i].replyer == userid){
@@ -153,19 +151,7 @@ $(document).ready(function(){
 		strDate = year+"-"+month+"-"+day+ " "+hour+":"+minute+":"+second;
 		return strDate;
 	}
-	
-	$("#delBoard").click(function(){
-		var writer = ${board.writer};
-		console.log(writer);
-		var user = ${user.userId};
-		console.log(user);
-		if(!(writer).equals(user)){
-			alert("작성자가 아닙니다");
-			return false;
-		}
-			
-	});
-	
+
 </script>
 </head>
 <body>
@@ -238,11 +224,8 @@ $(document).ready(function(){
 		<a href="deleteBoard.do" class="btn btn-link btn-sm">글 삭제</a>&nbsp;&nbsp;&nbsp;
 		<a href="getBoardList.do" class="btn btn-link btn-sm">글목록</a>
 	</c:when>
-	<c:when test="${user.userId ne board.writer}">
-		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
-		<a href="getBoardList.do">글목록</a>
-	</c:when>
 	<c:otherwise>
+		<a href="insertBoard.do">글 등록</a>&nbsp;&nbsp;&nbsp;
 		<a href="getBoardList.do">글목록</a>
 	</c:otherwise>
 </c:choose>

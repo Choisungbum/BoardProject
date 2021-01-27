@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.springbook</groupId>
 	<artifactId>biz</artifactId>
-	<name>ProjectLB</name>
+	<name>ProjectBoard</name>
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
@@ -39,6 +39,24 @@
     	  <scope>test</scope>
     	</dependency>
     	
+    	
+    	<!-- 이메일 인증관련 -->
+    	<dependency>
+    		<groupId>javax.mail</groupId>
+    		<artifactId>mail</artifactId>
+    		<version>1.4.7</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-context-support</artifactId>
+    		<version>${org.springframework-version}</version>
+    	</dependency>
+    <!-- 난수생성기 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+   	 		<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
     	
     	<!-- mysql -->
    	 	<dependency>

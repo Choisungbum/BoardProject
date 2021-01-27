@@ -6,6 +6,7 @@
 <head>
 <title>MainPage</title>
 <jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
+
 </head>
 <body>
 <center>

@@ -7,6 +7,7 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
+<script src="/resources/js/jquery.sumoselect.min.js"></script>
 <meta charset="UTF-8">
 <title>회원 정보수정</title>
 </head>
@@ -14,25 +15,23 @@
 $(document).ready(function(){
     // selectbox styling
 	 $('#slectBox').SumoSelect();
-    
 
-    
 	 var element1 = document.getElementById('radio1'); //성별 라이오 버튼
 	 var element2 = document.getElementById('radio2');
 	 
 	 $('#option2').on('click', function () {
 		 element1.classList.remove('active');
 		 element2.classList.add('active');
-		 $("option2").attr("checked", true);
-		 $("option1").attr("checked", false);
+		 $("#option2").attr("checked", true);
+		 $("#option1").attr("checked", false);
 		 alert("여");	  
 	 });
 	 
 	 $('#option1').on('click', function () {
 		 element2.classList.remove('active');
 		 element1.classList.add('active');
-		 $("option2").attr("checked", false);
-		 $("option1").attr("checked", true);
+		 $("#option2").attr("checked", false);
+		 $("#option1").attr("checked", true);
 		 alert("남");	  
 	 });
 	 
@@ -279,7 +278,7 @@ function passForm(){
 				<input type="text" maxlength="30" style="text-transform:lowercase;" class="form-control" name="email2" id="email2" value="${email.email2 }"  /> 
 			</div>
 		</div>
-		<select id="slectBox"  name="email3" onchange="fn_select(this)" style="position:relative;bottom:34px;">			
+		<select id="slectBox"  name="email3" onchange="fn_select(this)" style="position:relative;bottom:34px;right:13px">			
 			<option value="">이메일입력</option>
 			<option value="naver.com">naver.com</option>
 			<option value="gmail.com">gmail.com</option>

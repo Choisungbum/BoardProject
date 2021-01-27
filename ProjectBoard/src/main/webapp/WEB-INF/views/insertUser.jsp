@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>회원가입</title>
 <jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
+<link rel="stylesheet" href="/resources/css/sumoselect.css">
+<script src="/resources/js/jquery.sumoselect.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     // selectbox styling
@@ -80,16 +82,16 @@ $(document).ready(function(){
 	 $('#option2').on('click', function () {
 		 element1.classList.remove('active');
 		 element2.classList.add('active');
-		 $("option2").attr("checked", true);
-		 $("option1").attr("checked", false);
+		 $("#option2").attr("checked", true);
+		 $("#option1").attr("checked", false);
 		 alert("여");	  
 	 });
 	 
 	 $('#option1').on('click', function () {
 		 element2.classList.remove('active');
 		 element1.classList.add('active');
-		 $("option2").attr("checked", false);
-		 $("option1").attr("checked", true);
+		 $("#option2").attr("checked", false);
+		 $("#option1").attr("checked", true);
 		 alert("남");	  
 	 });
 
@@ -97,8 +99,6 @@ $(document).ready(function(){
 
 var telv = RegExp(/^[0-9]{11}$/);				//전화번호 유효성
 var namev = RegExp(/^[가-힣]{2,15}/);				//이름 유효성
-var email1v = RegExp(/^[a-zA-Z0-9]+$/);			//이메일1 유효성
-var email2v = RegExp(/^[a-zA-Z0-9]+\.[a-z]+$/);	//이메일2 유효성
 var birthv = RegExp(/^[0-9]{8}/)				//생년월일 유효성
 function formSubmit(){
 	if(document.insertForm.userId.value == ""){
@@ -106,7 +106,7 @@ function formSubmit(){
 		return false;
 	}
 	else if(document.insertForm.password.value == ""){
-		alert("입력한 비밀번호가 형식과 다릅니다");
+		alert("비밀번호를입력해주세요");
 		return false;
 	}
 	else if(document.getElementById("pass_poss").style.display == "none"){
@@ -123,14 +123,6 @@ function formSubmit(){
 	}
 	else if(!(namev).test(document.insertForm.name.value)){
 		alert("이름을 한글 혹은 15자 이내로 적어주세요");
-		return false;
-	}
-	else if(document.insertForm.email1.value == ""){
-		alert("이메일을 입력해주세요");
-		return false;
-	}
-	else if(!(email1v).test(document.insertForm.email1.value)){
-		alert("입력한 이메일이 형식과 다릅니다");
 		return false;
 	}
 	else if(document.insertForm.tel.value == ""){
@@ -157,11 +149,13 @@ function formSubmit(){
 		alert("아이디를 확인해주세요");
 		return false;
 	}
-	
-	
-	
+	else if(!(document.insertForm.email1.disabled == true && document.insertForm.email2.disabled == true)){
+		alert("이메일 인증을 해주세요.");
+		return false;
+	}
 	return true;
 }
+
 function fn_idChk(){
 	$.ajax({
 		url : "/loginIdCheck.do",
@@ -179,7 +173,123 @@ function fn_idChk(){
 				alert("사용가능한 아이디입니다");
 			}
 		}
-	})
+	});
+}
+
+function fn_sendEmail(){
+	
+	var email1v = RegExp(/^[a-zA-Z0-9]+$/);			//이메일1 유효성
+	var email2v = RegExp(/^[a-zA-Z0-9]+\.[a-z]+$/);	//이메일2 유효성
+	
+	if(document.insertForm.email1.value == "" || (document.insertForm.email2.value == "" && document.insertForm.email3.value == "self")){
+		alert("이메일을 입력해주세요");
+		return false;
+	}
+	else if(!(email1v).test(document.insertForm.email1.value)){
+		alert("입력한 이메일1이 형식과 다릅니다");
+		return false;
+	}
+	else if( document.insertForm.email3.value == ""  && !(email2v).test(document.insertForm.email2.value)){
+		alert("입력한 이메일2이 형식과 다릅니다");
+		return false;
+	}
+	
+	$.ajax({
+		url : "/sendEmail.do",
+		type : "post",
+		contentType : "application/json",
+		data : JSON.stringify({
+			'email1' : $("#email1").val(),
+			'email2' : $("#email2").val(),
+			'email3' : $("#email3").val()
+		}),
+	});
+	
+	var output = "";
+
+	output += "<div class='row' >"
+	+	"<div class='form-group' style='line-height:40px' >"
+	+	"<div id='emailSuccess' >"
+	+	"<div class='col-md-2 col-md-offset-4' >"
+	+	"<input type='text' class='form-control' name='validEmail' id='validEmail' style='text-transform:uppercase;' />" 
+	+	"</div>"
+	+	"<div class='col-md-1' >"
+	+	"	<span id='timer' class='label label-defualt' style='color:red;position:relative; right:15px'>3:00</span>"
+	+	"</div>"
+	+	"<div class='col-md-1' >"
+	+	"<div id='reSendEmail' >"
+	+	"	<button type='button' class='btn btn-success' onclick='fn_validEmailCheck()'>확인</button>"
+	+	"</div>"
+	+	"</div>"
+	+	"</div>"
+	+	"</div>"
+	+	"</div>";
+	
+	$("#emailForm").html(output);
+	
+	timer(); //타이머 시작
+}
+
+function fn_validEmailCheck(){
+	 var email1 = document.getElementById('email1'); 
+	 var email2 = document.getElementById('email2');
+	$.ajax({
+		url : "/sendEmailCheck.do",
+		type : "post",
+		contentType : "application/json",
+		data: JSON.stringify({
+			'validEmail' : $("#validEmail").val()
+		}),
+		success : function(data){
+			if(data == true){
+				stop_timer()
+				$("#emailSuccess").html("<div class='col-md-2 col-md-offset-4' ><span style='color:green'>인증을 완료하였습니다.</span></div>");
+				$("#email1").attr("disabled",true);
+				$("#email2").attr("disabled",true);
+				$("#selBox").html("");
+				alert("인증에 성공하셨습니다");
+			} else if(data == false){
+				alert("인증코드가 올바르지 않습니다.");	
+			}
+		} 
+	});
+}
+
+var min = 3;
+var sec = 1;
+var timerId = 0;
+
+function timer(){
+	timerId = setInterval("clock()",1000); //매1초마다 함수실행
+}
+
+function clock(){ //timer
+	sec -= 1;
+	
+	if(sec == -1){
+		sec = 59;
+		min -= 1;
+	}
+	if(sec < 10 && sec >= 0){
+		result = min + ":" + "0" + sec;	
+	} else
+		result = min + ":" + sec;
+	
+	if(min == 0 && sec == 0){
+		stop_timer();	
+		$("#reSendEmail").html("<button class='btn btn-warn' onclick='fn_sendEmail()'>재전송</button>");
+		$("#validEmail").attr("disabled",true);
+		min = 3;
+		sec = 1;
+		alert("시간이 만료 되었습니다.\n 다시 인증을 하고 싶으시다면 재전송 버튼을 눌러주세요");
+	}
+	
+	$("#timer").text(result);
+}
+
+
+function stop_timer(){
+	clearInterval(timerId);	
 }
 
 function fn_select(ema){
@@ -236,7 +346,7 @@ function isBirthday(dateStr) {
 <hr><br><br>
 <div class="container">
 <form name="insertForm" onSubmit="return formSubmit();" action="insertUser.do" method="post">
-<div class="row">
+	<div class="row">
 		<div class="form-group" style="line-height:40px">
 			<div class="col-md-1 col-md-offset-3" >
 				<label for="userId">아이디</label><br>
@@ -245,7 +355,7 @@ function isBirthday(dateStr) {
 				<input type="text" class="form-control" maxlength="12" name="userId" id="userId" placeholder="아이디를 입력하세요." />
 			</div>
 			<div class="col-md-1">
-			<button id="idChk" type="button" class="btn btn-default btn-sm" onclick="fn_idChk()" value="N" style="position:relative;bottom:5px;"disabled>중복확인</button>
+			<button id="idChk" type="button" onclick="fn_idChk()" class="btn btn-default btn-sm"  value="N" style="position:relative;bottom:5px;right:18px;" disabled>중복확인</button>
 			</div>
 		</div>
 	</div>
@@ -313,15 +423,25 @@ function isBirthday(dateStr) {
 				<input type="text" maxlength="30" style="text-transform:lowercase;" class="form-control" name="email2" id="email2"  disabled /> 
 			</div>
 		</div>
-		<select id="slectBox"  name="email3" onchange="fn_select(this)" style="position:relative;bottom:34px;">	
+		<div id="selBox">
+		<select id="slectBox"  name="email3" onchange="fn_select(this)" style="position:relative;bottom:34px">	
 				<option selected value="">이메일입력</option>
 				<option value="naver.com">naver.com</option>
 				<option value="gmail.com">gmail.com</option>
 				<option value="daum.net">daum.net</option>
 				<option value="self">직접입력</option>
-			</select>
+		</select>
+		</div>
 	</div>
-	
+	<div id="emailForm">
+		<div class="row">
+			<div class="form-group" style="line-height:40px">
+				<div class="col-md-1 col-md-offset-4" >
+					<button type="button" id="emailSendButton" onclick="fn_sendEmail()" class="btn btn-default" >이메일인증</button>
+				</div>	
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="form-group" style="line-height:40px">
 			<div class="col-md-1 col-md-offset-3" >

@@ -37,7 +37,6 @@
 			<mapping path="/insertBoard.do" />
 			<mapping path="/updateBoard.do" />
 			<mapping path="/deleteBoard.do" />
-			<mapping path="/getBoard.do" />
 			<beans:ref bean="authenticationInterceptor" />
 		</interceptor>
 	</interceptors>

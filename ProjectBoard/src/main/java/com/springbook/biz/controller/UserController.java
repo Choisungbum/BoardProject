@@ -3,12 +3,16 @@ package com.springbook.biz.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +31,11 @@ import com.springbook.biz.user.UserVO;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	static String authcode;
   
 	@RequestMapping(value = "/insertUser.do", method = RequestMethod.GET)		//회원가입 페이지
 	public String insertUserView(UserVO vo) {
@@ -45,6 +54,7 @@ public class UserController {
 		else if(email2 != null) {
 			ema +=email2;
 		}
+		
 		int idChk = userService.selectLoginId(vo);
 		
 		if(idChk == 1) {													//중복되는 ID가 있을 경우
@@ -145,5 +155,59 @@ public class UserController {
 		}
 		return "redirect:getBoardList.do";
 	}
+	
+	@RequestMapping(value="/sendEmail.do", method=RequestMethod.POST) //이메일 인증 서비스(안티바이러스 프로그램 등 보안 관련 프로그램 사용시 안될 수 있음 -> 해제)
+	@ResponseBody
+	public void sendEmail(@RequestBody Map<String, Object> email, Model model) throws Exception{
+		RandomStringUtils random = new RandomStringUtils();
+		
+		MimeMessage mail = mailSender.createMimeMessage();
+		MimeMessageHelper mailHelper = new MimeMessageHelper(mail,true,"UTF-8");
+		
+		String email1 = (String)email.get("email1");
+		String email2 = (String)email.get("email2");
+		String email3 = (String)email.get("email3");
+		String ema = email1 +"@";												
+		if(email2 == null) {
+			ema +=email3;
+		}
+		else if(email2 != null) {
+			ema +=email2;
+		}
+		authcode ="";
+		authcode = random.randomAlphanumeric(6).toUpperCase(); // 난수생성 ;
+		String subject = "게시판 이메일 인증";
+		String content = "이메일 인증 코드는 " + authcode + " 입니다.";
+		String from = "게시판 <본인 이메일>";
+		String to = ema;
+	
+		
+		System.out.println(authcode);
+		try {
+			mailHelper.setFrom(from);
+			mailHelper.setTo(to);
+			mailHelper.setSubject(subject);
+			mailHelper.setText(content);
 
+			mailSender.send(mail);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@RequestMapping(value="/sendEmailCheck.do", method=RequestMethod.POST)
+	@ResponseBody
+	public Boolean sendEmailCheck(@RequestBody Map<String, Object> valid){
+		String validEmail = (String)valid.get("validEmail");
+		
+		if (authcode.equals(validEmail.toUpperCase())) {
+			return true;
+		} else {
+			return false;
+		}
+			
+		
+	}
 }

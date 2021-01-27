@@ -7,18 +7,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>글 상세</title>
+<title>글 수정</title>
 <jsp:include page="/WEB-INF/views/ref.jsp"></jsp:include>
-<!-- json형식으로 값을 넘기는거에서 많이 힘ㄷ르었음 json형식 잘봐두기 content필수=>json.stringify사용(안의내용을 json형식으로 바꿔줌)-->
-<script>
-
-	
-</script>
 </head>
 <body>
 
 <center>
-<h1>글 상세</h1>
+<h1>글 수정</h1>
 </center>
 <br>
 <hr>
