@@ -15,7 +15,7 @@
  - Bootstrap 3.3.2
  ---
  ## 프로젝트 Use Case Diagram
- ![UseCaseDiagram](/ProjectBoard/img/useCaseDiagram.JPG)
+ ![UseCaseDiagram](https://i.esdrop.com/d/aHdVl8BMzz.png)
 -----------------------------
 
 ## Section :checkered_flag:
