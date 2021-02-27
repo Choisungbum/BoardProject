@@ -1,7 +1,7 @@
 # BoardProject
 ## 프로젝트 소개 :page_with_curl:
-> 로그인을 통해 게시글을 확인하거나 게시글을 , 수정,삭제 및 댓글작성 등 CRUD기능을 통해서 기본적인 커뮤니케이션을 할 수 있는 게시판을 만들었습니다.
-> spring을 이용해서 MVC모델을 구현했고, Model과 Controller단은 JAVA, VIEW단은 jsp, HTML과 CSS 그리고 JavaScript를 사용했습니다. 
+> 로그인을 통해 게시글을 확인하거나 게시글을 수정,삭제 및 댓글작성 등 CRUD기능을 통해서 기본적인 커뮤니케이션을 할 수 있는 게시판을 만들었습니다.
+> spring을 이용해서 MVC모델을 구현했고, Model과 Controller단은 JAVA, VIEW단에서는 HTML과 CSS ,bootstrap 그리고 JavaScript를 사용했습니다. 
 > JavaScript 라이브러리인 jQuery와 ajax를 통해서 서버와 비동기 통신을 했고, 전체적인 UI는 부트스트랩을 이용해 깔끔한 디자인으로 구성했습니다. 
 ---
 ## 개발환경 및 개발도구 :hammer:
@@ -125,7 +125,8 @@ authcode = random.randomAlphanumeric(6).toUpperCase(); // 난수생성 대문자
 
 _추가 기능 구현_
 - 중복검사 버튼
-- 이메일 인증 구현
+- 이메일 인증 기능 구현
+- 이메일 인증 코드(난수생성)
 
 [코드보기](https://github.com/Choisungbum/BoardProject/blob/main/ProjectBoard/src/main/webapp/WEB-INF/views/insertUser.jsp)
 
